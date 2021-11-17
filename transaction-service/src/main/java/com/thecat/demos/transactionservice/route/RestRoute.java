@@ -1,9 +1,10 @@
 package com.thecat.demos.transactionservice.route;
 
-import com.thecat.demos.transactionservice.entities.RestMessage;
+import com.thecat.demos.transactionservice.entities.TransactionDTO;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ public class RestRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         restConfiguration()
-                .component("servlet")
+ //               .component("servlet")
                 .contextPath(env.getProperty("camel.component.servlet.mapping.contextPath", "/rest/*"))
                 .apiContextPath("/api-doc")
                 .apiProperty("api.title", "Transaction Service")
@@ -30,7 +31,8 @@ public class RestRoute extends RouteBuilder {
                 .apiProperty("cors", "true")
                 .apiContextRouteId("doc-api")
                 .port(env.getProperty("server.port", "8080"))
-                .bindingMode(RestBindingMode.auto);
+                .bindingMode(RestBindingMode.auto)
+                .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
         rest("/transaction")
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -38,39 +40,32 @@ public class RestRoute extends RouteBuilder {
                 .get("/health").route()
                 .to("direct:health")
                 .endRest()
-                .post("/").route()
-                .marshal().json()
-                .unmarshal(getJacksonDataFormat(RestMessage.class))
+                .post("/").type(TransactionDTO.class).route()
                 .choice()
                     .when().simple("${body.type} == 'debit'")
-                        .to("{{route.debitTransaction}}") 
+                        .to("{{route.debitTransaction}}")
                     .when().simple("${body.type} == 'credit'")
-                        .to("{{route.creditTransaction}}" )
+                        .to("{{route.creditTransaction}}") 
                     .otherwise()
                         .log( "invalid path : ${body.type}" )
                 .end();
 
         from("{{route.debitTransaction}}")
-            .log("--------------------")
-            .log("service debit: ${body.type}")
-            .log("--------------------");
+            .log("calling the debit service")
+            .marshal().json(JsonLibrary.Jackson)
+            .removeHeader(Exchange.HTTP_URI)
+            .to("{{service.debitservice.url}}"); 
             
         from( "{{route.creditTransaction}}")    
-            .log("--------------------")
-            .log("service credit: ${body.type}")
-            .log("--------------------");
+            .log("calling the credit service")
+            .marshal().json(JsonLibrary.Jackson)
+            .removeHeader(Exchange.HTTP_URI)
+            .to("{{service.creditservice.url}}"); 
 
         from("direct:health")
             .log("--------------------")
             .log("service healthy")
             .log("--------------------");
 
-    }
-
-    private JacksonDataFormat getJacksonDataFormat(Class<?> unmarshalType) {
-        JacksonDataFormat format = new JacksonDataFormat();
-        format.setEnableJacksonTypeConverter(true);
-        format.setUnmarshalType(unmarshalType);
-        return format;
     }
 }

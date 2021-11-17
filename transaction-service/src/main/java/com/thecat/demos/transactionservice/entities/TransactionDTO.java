@@ -1,16 +1,16 @@
 package com.thecat.demos.transactionservice.entities;
 
-public class RestMessage {
+public class TransactionDTO {
 
     private String clientId;
     private String type;
     private String location;
     private double amount;
 
-    public RestMessage() {
+    public TransactionDTO() {
     }
 
-    public RestMessage(String clientId, String type, String location, double amount) {
+    public TransactionDTO(String clientId, String type, String location, double amount) {
         this.clientId = clientId;
         this.type = type;
         this.location = location;
@@ -52,7 +52,7 @@ public class RestMessage {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer( "Transaction: \n" );
-            
+        
         sb.append("clientId [ " + this.clientId + "]\n");
         sb.append("type [ " + this.type + "]\n");
         sb.append("location [ " + this.location + "]\n");

@@ -4,7 +4,6 @@ import com.thecat.demos.creditservice.entities.TransactionEntity;
 import com.thecat.demos.creditservice.services.CreditService;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -39,9 +38,7 @@ public class RestRoute  extends RouteBuilder {
                 .get("/").route()
                 .to("{{route.findAllTransactions}}")
                 .endRest()
-                .post("/").route()
-                .marshal().json()
-                .unmarshal(getJacksonDataFormat(TransactionEntity.class))
+                .post("/").type(TransactionEntity.class).route()
                 .to("{{route.saveTransaction}}") 
                 .end();
 
@@ -56,11 +53,5 @@ public class RestRoute  extends RouteBuilder {
         from("{{route.findAllTransactions}}")
                 .log( "Retrieve all transactions")
                 .bean(CreditService.class, "findAllTransactions");
-    }
-
-    private JacksonDataFormat getJacksonDataFormat(Class<?> unmarshalType) {
-        JacksonDataFormat format = new JacksonDataFormat();
-        format.setUnmarshalType(unmarshalType);
-        return format;
     }
 }
