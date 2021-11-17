@@ -1,7 +1,7 @@
-package com.thecat.demos.creditservice.route;
+package com.thecat.demos.debitservice.route;
 
-import com.thecat.demos.creditservice.entities.TransactionEntity;
-import com.thecat.demos.creditservice.services.TransactionService;
+import com.thecat.demos.debitservice.entities.TransactionEntity;
+import com.thecat.demos.debitservice.services.DebitService;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
@@ -11,11 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionRoute  extends RouteBuilder {
+public class RestRoute extends RouteBuilder {
 
     private final Environment env;
 
-    public TransactionRoute(Environment env) {
+    public RestRoute(Environment env) {
         this.env = env;
     }
 
@@ -23,14 +23,14 @@ public class TransactionRoute  extends RouteBuilder {
         restConfiguration()
                 .contextPath(env.getProperty("camel.component.servlet.mapping.contextPath", "/rest/*"))
                 .apiContextPath("/api-doc")
-                .apiProperty("api.title", "Spring Boot Camel Postgres Credit Service.")
+                .apiProperty("api.title", "Spring Boot Camel Postgres Debit Service.")
                 .apiProperty("api.version", "1.0")
                 .apiProperty("cors", "true")
                 .apiContextRouteId("doc-api")
                 .port(env.getProperty("server.port", "8080"))
                 .bindingMode(RestBindingMode.auto);
 
-        rest("/credit")
+        rest("/debit")
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
                 .produces(MediaType.APPLICATION_JSON_VALUE)
                 .get("/{clientId}").route()
@@ -47,16 +47,15 @@ public class TransactionRoute  extends RouteBuilder {
 
         from("{{route.saveTransaction}}")
                 .log("Received Body : ${body}")
-                .bean(TransactionService.class, "addTransaction(${body})");
+                .bean(DebitService.class, "addTransaction(${body})");
 
         from("{{route.findTransactionByClientId}}")
                 .log( "Received header : ${header.clientId}")
-                .bean(TransactionService.class, "findTransactionByClientId(${header.clientId})");
+                .bean(DebitService.class, "findTransactionByClientId(${header.clientId})");
 
         from("{{route.findAllTransactions}}")
                 .log( "Retrieve all transactions")
-                .bean(TransactionService.class, "findAllTransactions");
-
+                .bean(DebitService.class, "findAllTransactions");
     }
 
     private JacksonDataFormat getJacksonDataFormat(Class<?> unmarshalType) {

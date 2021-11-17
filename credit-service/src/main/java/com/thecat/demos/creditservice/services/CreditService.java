@@ -1,20 +1,21 @@
-package com.thecat.demos.debitservice.services;
+package com.thecat.demos.creditservice.services;
 
-import com.thecat.demos.debitservice.entities.TransactionEntity;
-import com.thecat.demos.debitservice.repository.TransactionRepository;
+import com.thecat.demos.creditservice.entities.TransactionEntity;
+import com.thecat.demos.creditservice.repository.TransactionRepository;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TransactionService {
+public class CreditService {
 
     private final TransactionRepository repository;
     
-    public TransactionService(TransactionRepository repository) {
+    public CreditService(TransactionRepository repository) {
         this.repository = repository;
     }
+
     /**
      * Add a new transaction in the table.
      */
