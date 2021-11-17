@@ -39,13 +39,25 @@ public class RestRoute extends RouteBuilder {
                 .to("direct:health")
                 .endRest()
                 .post("/").route()
+                .marshal().json()
                 .unmarshal(getJacksonDataFormat(RestMessage.class))
-                .to("{{route.debitTransaction}}")
+                .choice()
+                    .when().simple("${body.type} == 'debit'")
+                        .to("{{route.debitTransaction}}") 
+                    .when().simple("${body.type} == 'credit'")
+                        .to("{{route.creditTransaction}}" )
+                    .otherwise()
+                        .log( "invalid path : ${body.type}" )
                 .end();
 
         from("{{route.debitTransaction}}")
             .log("--------------------")
-            .log("service called: + ${body}")
+            .log("service debit: ${body.type}")
+            .log("--------------------");
+            
+        from( "{{route.creditTransaction}}")    
+            .log("--------------------")
+            .log("service credit: ${body.type}")
             .log("--------------------");
 
         from("direct:health")
