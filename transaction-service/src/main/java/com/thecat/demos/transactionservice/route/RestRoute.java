@@ -54,13 +54,15 @@ public class RestRoute extends RouteBuilder {
             .log("calling the debit service")
             .marshal().json(JsonLibrary.Jackson)
             .removeHeader(Exchange.HTTP_URI)
-            .to("{{service.debitservice.url}}"); 
+            .log("BODY: ${body}")
+            .to("{{service.debitservice.url}}?httpMethod=POST"); 
             
         from( "{{route.creditTransaction}}")    
             .log("calling the credit service")
             .marshal().json(JsonLibrary.Jackson)
             .removeHeader(Exchange.HTTP_URI)
-            .to("{{service.creditservice.url}}"); 
+            .log("BODY: ${body}")
+            .to("{{service.creditservice.url}}?httpMethod=POST"); 
 
         from("direct:health")
             .log("--------------------")
