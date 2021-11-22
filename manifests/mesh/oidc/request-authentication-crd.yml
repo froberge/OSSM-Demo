@@ -1,0 +1,13 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-auth
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+  jwtRules:
+  - issuer: https://sso-sso.apps.ocp.myocp.net/auth/realms/apps
+    jwksUri: https://sso-sso.apps.ocp.myocp.net/auth/realms/apps/protocol/openid-connect/certs
+    forwardOriginalToken: true
