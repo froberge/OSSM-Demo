@@ -7,7 +7,6 @@
     <groupId>com.thecat.demos</groupId>
     <artifactId>transactionservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <description>Demo project with Spring Boot, Camel and PostgreSQL</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
