@@ -69,6 +69,7 @@ Tout les operators peuvent-être installé a partir de `Operators -> OperatorHub
 3. [Kiali Operator](docs/install-kiali-operator.md)
 4. [Red Hat OpenShift Service Mesh](docs/install-ossm-operator.md)
 5. [Configuration du Service Mesh](#configuration-du-service-mesh)
+6. [Démo](#démo)
 
 Un fois terminer on devrait voir les different Opérateurs sous `Operators -> Installed Operators`
 
@@ -78,4 +79,152 @@ Un fois terminer on devrait voir les different Opérateurs sous `Operators -> In
 
 Maintenant que nous avons installé les opérateurs requis pour faire fonctionner le OpenShift Service Mesh nous devons la configurer.
 
-[Installer le ServiceMesh Control Plane](configure-ossm.md)
+[Installer le ServiceMesh Control Plane](docs/configure-ossm.md)
+
+### Démo
+
+Pour cette démo nous allons utiliser 3 service:
+* [Service transaction](transaction-service/README.md)
+* [Service Credit](credit-service/README.md)
+* [Service Debit](credit-service/README.md)
+
+```
+             +---------------------+ 
+             | Transaction Service |
+             +---------------------+
+                       |
+ +----------------+    |    +---------------+ 
+ | Credit Service | <-- --> | Debit Service |
+ +----------------+         +---------------+ 
+```
+
+Étapes:
+
+#### Mettre en place les projects
+* Créer un nouveau project dans laquelle deployé les differents services.
+    * `Home -> Project -> Create Project`
+        * `Nom:` uc1-zonea
+        * `Display:` Use Case 1 Zone A
+
+*  Créer un deuxième project pour simulé le multi-cluster
+    * `Home -> Project -> Create Project`
+        * `Nom:` uc1-zoneb
+        * `Display:` Use Case 1 Zone B
+
+* Dans le command line aller au project uc1-zonea
+```
+oc get project uc1-zonea
+```
+
+#### Mettre en place les base de données
+
+Pour que l'applicaiton roule nous devons avoir 2 base de données
+
+Base de données Crédit
+```
+oc apply -k manifests/databases/sb/creditdb
+```
+
+Base de données Débit
+```
+oc apply -k manifests/databases/sb/debitdb
+```
+
+#### Deployer le Transaction Service
+
+ * Déployer le `DeploymentConfig` 
+    ```
+    oc apply -f k8s/transaction-service/deploymentConfig.yaml
+    ```
+* Déployer le `Service`
+ ```
+ oc apply -f k8s/transaction-service/service.yaml
+ ```
+ 
+* Déployer le code
+```
+cd transaction-service/camel-springboot
+```
+```
+mvn clean package fabric8:build -P openshift -Dmaven.test.skip
+ ```
+
+
+#### Deployer le Credit Service
+
+ * Déployer le `DeploymentConfig` 
+    ```
+    oc apply -f k8s/credit-service/deploymentConfig.yaml
+    ```
+* Déployer le `Service`
+ ```
+ oc apply -f k8s/credit-service/service.yaml
+ ```
+
+* Déployer le code
+```
+cd credit-service/camel-springboot
+```
+```
+mvn clean package fabric8:build -P openshift -Dmaven.test.skip
+ ```
+
+
+
+#### Deployer le Debit Service
+
+ * Déployer le `DeploymentConfig` 
+    ```
+    oc apply -f k8s/debit-service/deploymentConfig.yaml
+    ```
+* Déployer le `Service`
+ ```
+ oc apply -f k8s/debit-service/service.yaml
+ ```
+
+* Déployer le code
+```
+cd debit-service/camel-springboot
+```
+```
+mvn clean package fabric8:build -P openshift -Dmaven.test.skip
+ ```
+
+
+#### Création des élements requis pour le ServiceMesh
+* Le Gateway pour avoir un entré dans la Mesh
+* Le service virtuel pour le creditservice
+* Le service virtuel pour le debitservice
+* Les élément pour authentication oidc
+
+Le gateway
+```
+oc apply -f manifests/mesh/gateway.yaml
+```
+
+Le service virtuel creditservice
+```
+oc apply -f manifests/mesh/creditservice-vs.yaml
+```
+
+Le service virtuel debitservice
+```
+oc apply -f manifests/mesh/debitservice-vs.yaml
+```
+
+Pour oicd
+```
+oc apply -f manifests/mesh/oidc/authorization-policy-crd.yaml
+```
+```
+oc apply -f manifests/mesh/oidc/request-authentication-crd.yaml
+```
+
+#### Pour avoir l'url pour le Istio ingress
+```
+QUERY=$(oc get virtualservice/transaction -o jsonpath='{.spec.http[0].match[0].uri.exact}')
+GATEWAY_URL="http://$(oc get route istio-ingressgateway -n istio-system --template='{{ .spec.host }}')$QUERY"
+echo $GATEWAY_URL
+```
+
+Il est maintenant possible de faire des tests.
