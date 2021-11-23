@@ -11,7 +11,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "bank-quarkus-demo/*"
+    - "*"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -25,9 +25,9 @@ spec:
   http:
   - match:
     - uri:
-        exact: /bank-quarkus-demo
+        prefix: /bank-demo
     rewrite:
-      uri: "/transaction"
+      uri: "/"
     route:
     - destination:
         host: transaction
