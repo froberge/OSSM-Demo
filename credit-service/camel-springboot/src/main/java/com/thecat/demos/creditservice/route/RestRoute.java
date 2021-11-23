@@ -58,8 +58,8 @@ public class RestRoute  extends RouteBuilder {
                 .bean(CreditService.class, "findAllTransactions");
 
         from("direct:version")
-                .log("service healthy")
-                .transform().simple( "version1" );
+                .log("service version")
+                .setBody().simple( env.getProperty("version") );
     
     }
 }

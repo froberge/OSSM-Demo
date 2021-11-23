@@ -50,6 +50,11 @@ public class RestRoute extends RouteBuilder {
                         .log( "invalid path : ${body.type}" )
                 .end();
 
+        rest("/credit")
+                .get("/version").route()
+                .to("{{route.creditVersion}}")
+                .end();
+
         from("{{route.debitTransaction}}")
             .log("calling the debit service")
             .marshal().json(JsonLibrary.Jackson)
@@ -66,9 +71,17 @@ public class RestRoute extends RouteBuilder {
             .log("BODY: ${body}")
             .to("{{service.creditservice.url}}?httpMethod=POST"); 
 
+        from( "{{route.creditVersion}}")    
+            .log("calling the credit Version")
+            .removeHeader(Exchange.HTTP_URI)
+            .removeHeader(Exchange.HTTP_PATH)
+            .to("{{service.creditservice.url}}/version?httpMethod=GET")
+            .transform().simple( "credit service => ${body} \n");
+
+
         from("direct:health")
             .log("service healthy")
-            .transform().simple( "healthy" );
+            .setBody().simple( "healthy" );
 
     }
 }
