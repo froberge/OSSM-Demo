@@ -7,12 +7,14 @@ metadata:
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"postgresql-demo"}]'
   labels:
     app: creditservice
     app.kubernetes.io/component:  creditservice-dc
     app.kubernetes.io/instance: backend
     app.kubernetes.io/part-of: credit-app
-    app.openshift.io/runtime: java
+    app.openshift.io/runtime: spring-boot
     deploymentconfig: creditservice
     version: v1
   name: creditservice

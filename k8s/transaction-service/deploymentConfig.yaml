@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/component:  transaction-dc
     app.kubernetes.io/instance: backend
     app.kubernetes.io/part-of: transaction-app
-    app.openshift.io/runtime: java
+    app.openshift.io/runtime: spring-boot
     deploymentconfig: transaction
     version: v1
   name: transaction
@@ -105,5 +105,5 @@ spec:
         from:
           kind: ImageStreamTag
           namespace: uc1-zonea
-          name: 'transaction:latest'
+          name: 'transactionservice:latest'
           

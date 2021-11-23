@@ -3,10 +3,14 @@ kind: Service
 metadata:
   name: creditservice
   labels:
-    app: creditservice    
+    app: creditservice
+    app.kubernetes.io/component: creditservice-svc
+    app.kubernetes.io/instance: creditservice
+    app.kubernetes.io/part-of: creadit-app
 spec:
   ports:
   - name: http
     port: 8080
   selector:
     app: creditservice
+    deploymentconfig: creditservice

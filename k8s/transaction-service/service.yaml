@@ -4,9 +4,13 @@ metadata:
   name: transaction
   labels:
     app: transaction
+    app.kubernetes.io/component: transaction-svc
+    app.kubernetes.io/instance: transaction
+    app.kubernetes.io/part-of: transaction-app
 spec:
   ports:
   - name: http
     port: 8080
   selector:
     app: transaction
+    deploymentconfig: transaction

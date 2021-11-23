@@ -7,12 +7,14 @@ metadata:
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"postgresql-debit-demo"}]'
   labels:
     app: debitservice
     app.kubernetes.io/component:  debitservice-dc
     app.kubernetes.io/instance: backend
     app.kubernetes.io/part-of: debit-app
-    app.openshift.io/runtime: java
+    app.openshift.io/runtime: spring-boot
     deploymentconfig: debitservice
     version: v1
   name: debitservice

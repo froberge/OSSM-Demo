@@ -4,9 +4,13 @@ metadata:
   name: debitservice
   labels:
     app: debitservice    
+    app.kubernetes.io/component: debitservice-svc
+    app.kubernetes.io/instance: debitservice
+    app.kubernetes.io/part-of: debit-app
 spec:
   ports:
   - name: http
     port: 8080
   selector:
     app: debitservice
+    deploymentconfig: debitservice
