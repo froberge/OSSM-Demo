@@ -27,6 +27,8 @@ public class RestRoute extends RouteBuilder {
                 .endRest()
                 .post("/transaction")
                 .route()
+                .removeHeader(Exchange.HTTP_URI)
+                .removeHeader(Exchange.HTTP_PATH)    
                 .log("request received: ${body}")
                 .choice()
                     .when().simple("${body[type]} == 'debit'")
@@ -39,16 +41,13 @@ public class RestRoute extends RouteBuilder {
 
         from("direct:debitTransaction")
             .log("calling the debit service")
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
-            .log("BODY: ${body}")
+            .marshal().json(JsonLibrary.Jackson)
+            .log("BODY: ${body}")  
             .to("http:debitservice:8080/debit?httpMethod=POST"); 
             
         from("direct:creditTransaction")    
             .log("calling the credit service")
             .marshal().json(JsonLibrary.Jackson)
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
             .log("BODY: ${body}")
             .to("http:creditservice:8080/credit?httpMethod=POST"); 
 

@@ -48,8 +48,7 @@ spec:
                   - > 
                     sleep 10 && PGPASSWORD=$POSTGRESQL_PASSWORD psql -d $POSTGRESQL_DATABASE -U $POSTGRESQL_USER <<EOF 
                       \x
-                      CREATE SEQUENCE if not exists transaction_seq START WITH 1 INCREMENT BY 1;
-                      CREATE TABLE if not exists transaction ( ID INT NOT NULL, CLIENT_ID VARCHAR(20) NOT NULL, TYPE VARCHAR(10)      NOT NULL, LOCATION VARCHAR(50)  NOT NULL, AMOUNT FLOAT8 NOT NULL, CREATE_DATE DATE, PRIMARY KEY (ID));
+                      CREATE TABLE if not exists transaction ( ID SERIAL PRIMARY KEY, CLIENT_ID VARCHAR(20) NOT NULL, TYPE VARCHAR(10)      NOT NULL, LOCATION VARCHAR(50)  NOT NULL, AMOUNT FLOAT8 NOT NULL, CREATE_DATE DATE);
                     EOF 
           failureThreshold: 3
           initialDelaySeconds: 30
