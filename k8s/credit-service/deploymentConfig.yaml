@@ -15,9 +15,9 @@ metadata:
     app.kubernetes.io/instance: backend
     app.kubernetes.io/part-of: credit-app
     app.openshift.io/runtime: spring-boot
-    deploymentconfig: creditservice
+    deploymentconfig: creditservice-v1
     version: v1
-  name: creditservice
+  name: creditservice-v1
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -25,7 +25,8 @@ spec:
   selector:
     name: creditservice
     app: creditservice
-    deploymentconfig: creditservice
+    version: v1
+    deploymentconfig: creditservice-v1
   strategy:
     type: Rolling
     rollingParams:
@@ -44,7 +45,8 @@ spec:
       labels:
         name: creditservice
         app: creditservice
-        deploymentconfig: creditservice
+        deploymentconfig: creditservice-v1
+        version: v1
     spec:
       containers:
         - resources: {}

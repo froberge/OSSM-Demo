@@ -9,5 +9,6 @@ spec:
   - route:
     - destination:
         host: creditservice
+        subset: version-v1
       weight: 100
 ---
