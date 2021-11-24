@@ -1,21 +1,30 @@
 # Parti 3 - Deployment d'une deuxieme version du service Credit
 
-Maintenant que nous avons une Mesh qui fonctionne nous voulons donc la sécuriser.
-
-Pour ce faire nous allons utiliser un REALM dans keyCloak qui a déja été créé pour nous
-Nous pourrons utiliser un utilisateur demo.
+Ajoutons mainteannt une deuxieme version du service dans le project.
 
 
 ## Étapes:
+
+### Deploiment de la version 2.
+
 
 ```
 oc apply -f k8s/credit-service/deploymentConfig_v2.yaml
 ```
 
+### Deploiment de la Destination Rule
 ```
 oc apply -f k8s/credit-service/destination-rule-v1-v2.yaml
 ```
+or
 
+oc replace -f k8s/credit-service/destination-rule-v1-v2.yaml
+
+### Deploiment du service Virtuel
 ```
-oc apply -f k8s/credit-service/virtual-service-v1-v2_50_50.yaml
+oc create -f k8s/credit-service/virtual-service-v1-v2.yaml
+```
+or
+```
+oc replace -f k8s/credit-service/virtual-service-v1-v2.yaml
 ```

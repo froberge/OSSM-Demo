@@ -29,6 +29,8 @@ public class RestRoute extends RouteBuilder {
                 .port(env.getProperty("server.port", "8080"))
                 .bindingMode(RestBindingMode.auto);
 
+
+
         rest("/debit")
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
                 .produces(MediaType.APPLICATION_JSON_VALUE)
@@ -37,6 +39,9 @@ public class RestRoute extends RouteBuilder {
                 .endRest()
                 .get("/").route()
                 .to("{{route.findAllTransactions}}")
+                .endRest()
+                .get("/health").route()
+                .to("direct:health")
                 .endRest()
                 .post("/").type(TransactionEntity.class).route()
                 .to("{{route.saveTransaction}}") 
@@ -53,5 +58,9 @@ public class RestRoute extends RouteBuilder {
         from("{{route.findAllTransactions}}")
                 .log( "Retrieve all transactions")
                 .bean(DebitService.class, "findAllTransactions");
-    }
+
+        from("direct:health")
+                .log("service version")
+                .setBody().simple( "healthy" );
+     }
 }

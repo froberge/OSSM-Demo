@@ -15,9 +15,9 @@ metadata:
     app.kubernetes.io/instance: backend
     app.kubernetes.io/part-of: debit-app
     app.openshift.io/runtime: spring-boot
-    deploymentconfig: debitservice
+    deploymentconfig: debitservice-v1
     version: v1
-  name: debitservice
+  name: debitservice-v1
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -25,7 +25,8 @@ spec:
   selector:
     name: debitservice
     app: debitservice
-    deploymentconfig: debitservice
+    version: v1
+    deploymentconfig: debitservice-v1
   strategy:
     type: Rolling
     rollingParams:
@@ -44,7 +45,8 @@ spec:
       labels:
         name: debitservice
         app: debitservice
-        deploymentconfig: debitservice
+        deploymentconfig: debitservice-v1
+        version: v1
     spec:
       containers:
         - resources: {}

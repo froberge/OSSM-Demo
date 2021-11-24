@@ -13,9 +13,9 @@ metadata:
     app.kubernetes.io/instance: backend
     app.kubernetes.io/part-of: transaction-app
     app.openshift.io/runtime: spring-boot
-    deploymentconfig: transaction
+    deploymentconfig: transaction-v1
     version: v1
-  name: transaction
+  name: transaction-v1
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -23,7 +23,8 @@ spec:
   selector:
     name: transaction
     app: transaction
-    deploymentconfig: transaction
+    version: v1
+    deploymentconfig: transaction-v1
   strategy:
     type: Rolling
     rollingParams:
@@ -42,7 +43,8 @@ spec:
       labels:
         name: transaction
         app: transaction
-        deploymentconfig: transaction
+        deploymentconfig: transaction-v1
+        version: v1
     spec:
       containers:
         - resources: {}
