@@ -48,6 +48,7 @@ public class RestRoute extends RouteBuilder {
                 .end();
 
         from("{{route.saveTransaction}}")
+                .log("jwt : ${header.Authorization}")
                 .log("Received Body : ${body}")
                 .bean(DebitService.class, "addTransaction(${body})");
 
