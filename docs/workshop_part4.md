@@ -1,6 +1,6 @@
-# Parti 3 - Deployment d'une deuxieme version dans un autre project
+# Ajout d'un Member Roll au Service Mesh
 
-Ajoutons mainteannt une deuxieme version du service dans le project.
+Ajoutons maintenant un deuxième project a notre service mesh.
 
 
 ## Ajout du Project
@@ -120,36 +120,3 @@ status:
 
 
 * Clicker sur `Save`
-
-## Ajout de l'application
-
-* Dans le command line aller au project uc1-zoneb
-```
-oc project uc1-zoneb
-```
-
-### Mettre en place la base de données
-
-Pour permettre au service de fonctionner nous besoins d'une base de données.
-
-Base de données Crédit
-```
-oc apply -k manifests/databases/sb/creditdb
-```
-
-### Déployer le Credit Service version 2
-
-* Déployer le code `DeploymentConfig` 
-```
-oc apply -f k8s/credit-service/deploymentConfig_v2.yaml
-```
-* Déployer le `Service`
- ```
- oc apply -f k8s/credit-service/service.yaml
- ```
-
-:construction: `UNDER CONSTRUCTION` :construction:
-
-Pour le moment nous pouvons démontrer la théorie dans l'environnement que nous avons.
-
-https://istio.io/latest/docs/tasks/traffic-management/locality-load-balancing/failover/

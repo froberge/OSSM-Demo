@@ -1,4 +1,4 @@
-# Parti 1
+# Création du Project
 
 Lors de cette section nous allons mettre en place les different service ainsi que le istio-ingress.
 
