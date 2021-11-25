@@ -14,7 +14,7 @@ Se tutorial utilise le code fait avec `camel-springboot`.
 
 * Dans le command line aller au project uc1-zonea
 ```
-oc get project uc1-zonea
+oc project uc1-zonea
 ```
 
 ### Mettre en place les base de données
@@ -104,13 +104,17 @@ oc apply -f manifests/mesh/creditservice-vs.yaml
 oc apply -f manifests/mesh/debitservice-vs.yaml
 ```
 
-#### Pour avoir l'url pour le Istio ingress
-```
-QUERY=$(oc get virtualservice/transaction -o jsonpath='{.spec.http[0].match[0].uri.exact}')
-GATEWAY_URL="http://$(oc get route istio-ingressgateway -n istio-system --template='{{ .spec.host }}')$QUERY"
-echo $GATEWAY_URL
-```
+## Faire un route HTTPS pour le istio-ingtressgateway
+
+* `Name`: bank-demo
+* `Service`: istio-ingressgateway
+* `Target port`: 80 -> 8080(TCP)
+* Select `Secure Route`
+* `TLS termination`: Edge
+
+
+![route-ingress](images/route-ingress.png)
 
 :tada: FÉLICITATION
 
-Il est maintenant possible de faire des tests.
+Il est maintenant possible de faire des tests avec la route qui vient d'être fait.

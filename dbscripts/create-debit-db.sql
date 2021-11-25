@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS "transaction";
 DROP SEQUENCE IF EXISTS "transaction_seq";
 
-
 CREATE SEQUENCE "transaction_seq"
   START WITH     1
   INCREMENT BY   1;

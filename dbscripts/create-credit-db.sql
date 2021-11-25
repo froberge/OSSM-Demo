@@ -1,8 +1,5 @@
 DROP TABLE IF EXISTS "transaction";
 DROP SEQUENCE IF EXISTS "transaction_seq";
-DROP SCHEMA IF EXISTS cs_credit;
-
-CREATE SCHEMA cs_credit;
 
 CREATE SEQUENCE "transaction_seq"
   START WITH     1

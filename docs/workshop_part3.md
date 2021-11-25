@@ -1,6 +1,6 @@
 # Parti 3 - Deployment d'une deuxieme version du service Credit
 
-Ajoutons mainteannt une deuxieme version du service dans le project.
+Ajoutons maintenant une deuxieme version du service dans le project.
 
 
 ## Étapes:

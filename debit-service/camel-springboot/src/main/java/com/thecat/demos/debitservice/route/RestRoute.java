@@ -29,8 +29,6 @@ public class RestRoute extends RouteBuilder {
                 .port(env.getProperty("server.port", "8080"))
                 .bindingMode(RestBindingMode.auto);
 
-
-
         rest("/debit")
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
                 .produces(MediaType.APPLICATION_JSON_VALUE)
@@ -48,16 +46,15 @@ public class RestRoute extends RouteBuilder {
                 .end();
 
         from("{{route.saveTransaction}}")
-                .log("jwt : ${header.Authorization}")
-                .log("Received Body : ${body}")
+                .log("save transaction values: ${body}" )
                 .bean(DebitService.class, "addTransaction(${body})");
 
         from("{{route.findTransactionByClientId}}")
-                .log( "Received header : ${header.clientId}")
+                .log("Find client transaction client :  ${header.clientId}" )
                 .bean(DebitService.class, "findTransactionByClientId(${header.clientId})");
 
         from("{{route.findAllTransactions}}")
-                .log( "Retrieve all transactions")
+                .log( "find all transactions")
                 .bean(DebitService.class, "findAllTransactions");
 
         from("direct:health")

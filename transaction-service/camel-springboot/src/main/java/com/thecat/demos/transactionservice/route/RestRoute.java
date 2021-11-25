@@ -60,8 +60,6 @@ public class RestRoute extends RouteBuilder {
             .marshal().json(JsonLibrary.Jackson)
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
-            //.setHeader("Authorization").simple("${header.jwt}")
-            .log("jwt : ${header.Authorization}")
             .log("BODY: ${body}")
             .to("{{service.debitservice.url}}?httpMethod=POST"); 
             
