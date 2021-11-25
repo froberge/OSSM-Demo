@@ -1,6 +1,6 @@
 # Création du Project
 
-Lors de cette section nous allons mettre en place les different service ainsi que le istio-ingress.
+Lors de cette section nous allons mettre en place les differents service ainsi que le istio-ingress.
 
 Se tutorial utilise le code fait avec `camel-springboot`.
 
@@ -12,7 +12,7 @@ Se tutorial utilise le code fait avec `camel-springboot`.
         * `Nom:` uc1-zonea
         * `Display:` Use Case 1 Zone A
 
-* Dans le command line aller au project uc1-zonea
+* Au command line aller au project uc1-zonea
 ```
 oc project uc1-zonea
 ```
@@ -118,3 +118,5 @@ oc apply -f manifests/mesh/debitservice-vs.yaml
 :tada: FÉLICITATION
 
 Il est maintenant possible de faire des tests avec la route qui vient d'être fait.
+
+:point_right: Retour: [Démo](../README.md#demo)

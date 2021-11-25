@@ -11,11 +11,11 @@ Tout d'abord, connectez-vous à la console OpenShift avec un utilisateur disposa
 Ensuite, allez dans `Operators -> OperatorHub`. Vous devriez maintenant voir une liste des opérateurs disponibles pour OpenShift fournie par Red Hat, la communauté et nos partenaires.
 ![Operator Hub](images/operator-hub.png)
 
-Pour faciliter le processus, dans le `Filter byé...`, tapez Service Mesh pour trouver l'opérateur requis :
+Pour faciliter le processus, dans le `Filter by...`, tapez Service Mesh pour trouver l'opérateur requis :
 
 ![Service Mesh Operator](images/ossm-operator.png)
 
-Cliquez sur l'opérateur Red Hat OpenShift Service Mesh pour démarrer l'installation. Laissez le paramètre par défaut et cliquez sur Installer pour démarrer le processus d'installation.
+Cliquez sur l'opérateur Red Hat OpenShift Service Mesh pour démarrer l'installation. Laissez le paramètre par défaut et cliquez sur `Installer` pour démarrer le processus d'installation.
 
 ![Installation](images/install-ossm-operator.png)
 

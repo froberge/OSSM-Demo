@@ -1,10 +1,7 @@
-# Credit Service
+# Transaction Service
 
-This Microservice was develop using [Spring Boot](https://spring.io/projects/spring-boot), [Apache Camel](https://camel.apache.org/) with [Red Hat Fuse](https://www.redhat.com/en/technologies/jboss-middleware/fuse) and [PostgreSQL](https://www.postgresql.org/)
+This microservice was develop using [Spring Boot](https://spring.io/projects/spring-boot), [Apache Camel](https://camel.apache.org/) with [Red Hat Fuse](https://www.redhat.com/en/technologies/jboss-middleware/fuse) and [PostgreSQL](https://www.postgresql.org/)
 
-## Objectif
-
-This service exposes different endpoints and is used to execute CRUD operations on the database on the Credit database
 
 ## How to run
 

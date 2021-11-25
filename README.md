@@ -9,9 +9,16 @@ Bienvenue dans l'atelier de travail sur [**Red Hat OpenShift Service Mesh**](htt
 Le Service Mesh utilise un proxy de type `sidecar` par [Envoy](https://www.envoyproxy.io/) pour intercepter les communications réseau entre les microservices. `Red Hat OpenShift Service Mesh` repose sur le project libre 
 [Istio](https://istio.io/).
 
+---
+## Table des matières
+* [Caractéristiques Principales](#caracteristiques-principales)
+ * [Architecture](#architecture)
+ * [Prerequis](#prerequis)
+ * [Installation des Operateurs](#installation-des-operateurs)
+ * [Configuration du Service Mesh](#configuration-du-service-mesh)
 
-Caractéristiques Principales
-
+---
+### Caractéristiques Principales
 * Découverte de services
 * Équilivrage de charge ( Load Balancing)
 * Authentication service à service
@@ -24,12 +31,12 @@ Caractéristiques Principales
 * Control des accès
 * Authentication End-to-end
 
+---
 ### Architecture
 
 ![Architecture](docs/images/ossm-control-data-plane.png)
-### Caractéristiques principales
 
-### Composante
+#### Composantes
 
 * [Istio](https://istio.io/): Istio fourni le controle et le data plane qui sont les composante principale du `Service Mesh`. Il est opérationnalisé dans OpenShift avec l'opérateur `Red Hat OpenShift Service Mesh`.
 
@@ -42,19 +49,13 @@ Il est opérationnalisé dans OpenShift avec l'opérateur `OpenShift Elasticsear
 
 * [Grafana](https://grafana.com/)[Prometheus](https://prometheus.io/): Grafana fourni des dashboard et Prometheus store les informations de télémétrie des services. Kiali est dépendant de Prometheus. Grafana et Prometheus viennent par défault dans la plateforme OpenShift.
 
-
-
-### Table des matières
- * [Prerequis](#prerequis)
- * [Installation des Operateurs](#installation-des-operateurs)
- * [Configuration du Service Mesh](#configuration-du-service-mesh)
- 
- ## Prérequis
+--- 
+### Prérequis
 
  * Un cluster OpenShift
  * Un compte administraeur pour se connecter au cluster
 
-
+---
 ### Installation des Operateurs
 
 Comme nous l'avons vus dans les composante, Red Hat OpenShift Service Mesh comprend plusieurs composante. Nous devons donc installé 4 opérateurs pour pouvoir la mettre en place.
@@ -75,13 +76,15 @@ Un fois terminer on devrait voir les different Opérateurs sous `Operators -> In
 
 ![Installed Operators](docs/images/all-operator.png)
 
+---
 ### Configuration du Service Mesh
 
 Maintenant que nous avons installé les opérateurs requis pour faire fonctionner le OpenShift Service Mesh nous devons la configurer.
 
 [Installer le ServiceMesh Control Plane](docs/configure-ossm.md)
 
-### Démo
+---
+## Démo
 
 Pour cette démo nous allons utiliser 3 service:
 * [Service transaction](transaction-service/README.md)
@@ -98,8 +101,9 @@ Pour cette démo nous allons utiliser 3 service:
  +----------------+         +---------------+ 
 ```
 
-### Section
+
+### Contenu
 1. [Mise en place du project](docs/workshop_part1.md)
 2. [Mise en place de la securité](docs/workshop_part2.md)
-3. [Deployer une deuxieme version]()
-4.
+3. [Deployer une deuxieme version](docs/workshop_part3.md)
+4. [Démontrer le failOver](docs/workshop_part4.md)

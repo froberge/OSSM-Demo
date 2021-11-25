@@ -1,12 +1,11 @@
 # Ajout d'un Member Roll au Service Mesh
 
-Ajoutons maintenant un deuxième project a notre service mesh.
-
+Ajoutons maintenant un deuxième project à notre service mesh.
 
 ## Ajout du Project
 
 ### Mettre en place les projects
-* Créer un nouveau project dans laquelle deployé les differents services.
+* Créer un nouveau project
     * `Home -> Project -> Create Project`
         * `Nom:` uc1-zoneb
         * `Display:` Use Case 1 Zone B
@@ -15,7 +14,7 @@ Ajoutons maintenant un deuxième project a notre service mesh.
 
 * Sélectionner le project créé plus haut.  `istio-system`.
 
-* Allez dans les opérators Installé. `Operators -> Installed Operators`
+* Allez dans les opérators installé. `Operators -> Installed Operators`
 ![Installed Operators](images/all-operator.png)
 
 * Sélectionner `Red Hat OpenShift Service Mesh Operator.
@@ -27,7 +26,7 @@ Ajoutons maintenant un deuxième project a notre service mesh.
 * Clicker sur YAML, pour l'éditer
 ![edit-yaml](images/smmr-yaml-edit.png)
 
-* Ajouter le project, Dans les section `members` et `configuredMembers`. Le Yaml devrait ressembler à ceci.
+* Ajouter le project, dans les sections `members` et `configuredMembers`. Le yaml devrait ressembler à ceci.
 > apiVersion: maistra.io/v1
 kind: ServiceMeshMemberRoll
 metadata:
@@ -120,3 +119,7 @@ status:
 
 
 * Clicker sur `Save`
+
+:tada: FÉLICITATION
+
+Vous avez maintenant un deuxième project qui est pris en charge par le Service Mesh

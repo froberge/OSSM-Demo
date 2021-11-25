@@ -11,13 +11,13 @@ Tout d'abord, connectez-vous à la console OpenShift avec un utilisateur disposa
 Ensuite, allez dans `Operators -> OperatorHub`. Vous devriez maintenant voir une liste des opérateurs disponibles pour OpenShift fournie par Red Hat, la communauté et nos partenaires.
 ![Operator Hub](images/operator-hub.png)
 
-Pour faciliter le processus, dans le `Filter byé...`, tapez Elastic pour trouver l'opérateur requis :
+Pour faciliter le processus, dans le `Filter by...`, tapez Elastic pour trouver l'opérateur requis :
 
 ![Elastic Operator](images/elastic-operator.png)
 
 Cliquez sur l'opérateur `OpenShift Elasticsearch` pour démarrer l'installation. 
 
-Sélectionnez la version stable-5.x et cliquez sur Installer pour démarrer le processus d'installation.
+Sélectionnez la version stable-5.x et cliquez sur `Installer` pour démarrer le processus d'installation.
 
 ![Installation](images/install-elastic-opetator.png)
 
@@ -25,6 +25,6 @@ Sélectionnez la version stable-5.x et cliquez sur Installer pour démarrer le p
 
 L'opérateur OpenShift Elasticsearch est maintenant installé dans le cluster d’OpenShift.
 
-:point_right: Suivant: [Installation de Jaeger](install-jaeger-operator.md)
+:point_right: Suivant: [Installation de OpenShift distributed tracing platform](install-jaeger-operator.md)
 
 
