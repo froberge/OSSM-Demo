@@ -20,3 +20,5 @@ oc apply -f manifests/mesh/oidc/request-authentication-crd.yml
 :tada: FÉLICITATION
 
 Il est maintenant possible de faire des tests.
+
+:point_right: Retour: [Démo](../README.md#demo)

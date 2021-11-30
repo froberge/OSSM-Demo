@@ -2,6 +2,7 @@ package com.thecat.demos.transactionservice.route;
 
 import com.thecat.demos.transactionservice.entities.TransactionDTO;
 
+import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -12,18 +13,17 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class RestRoute extends RouteBuilder {
+public class TransactionRoute extends RouteBuilder {
 
     private final Environment env;
 
-    public RestRoute(Environment env) {
+    public TransactionRoute(Environment env) {
         this.env = env;
     }
 
     public void configure() throws Exception {
 
         restConfiguration()
- //               .component("servlet")
                 .contextPath(env.getProperty("camel.component.servlet.mapping.contextPath", "/rest/*"))
                 .apiContextPath("/api-doc")
                 .apiProperty("api.title", "Transaction Service")
@@ -40,6 +40,9 @@ public class RestRoute extends RouteBuilder {
                 .get("/health").route()
                 .to("direct:health")
                 .endRest()
+                .get("/").route()
+                .to("{{route.findAllTransactions}}")
+                .endRest()
                 .post("/").type(TransactionDTO.class).route()
                 .choice()
                     .when().simple("${body.type} == 'debit'")
@@ -49,12 +52,10 @@ public class RestRoute extends RouteBuilder {
                     .otherwise()
                         .log( "invalid path : ${body.type}" )
                 .end();
-
-        rest("/credit")
-                .get("/version").route()
-                .to("{{route.creditVersion}}")
-                .end();
-
+        from("direct:health")
+            .log("service healthy")
+            .setBody().simple( "healthy" );
+                
         from("{{route.debitTransaction}}")
             .log("calling the debit service")
             .marshal().json(JsonLibrary.Jackson)
@@ -62,6 +63,17 @@ public class RestRoute extends RouteBuilder {
             .removeHeader(Exchange.HTTP_PATH)
             .log("BODY: ${body}")
             .to("{{service.debitservice.url}}?httpMethod=POST"); 
+
+        from("{{route.debitAllTransaction}}")
+            .log("calling the debit service  get all transaction")
+            .removeHeader(Exchange.HTTP_URI)
+            .removeHeader(Exchange.HTTP_PATH)
+            .doTry()
+                .to("{{service.debitservice.url}}?httpMethod=GET")
+            .doCatch(Exception.class)
+                .setBody().simple("{\"error\": \"Debit Service\"}")
+            .end()
+            .convertBodyTo(String.class); 
             
         from( "{{route.creditTransaction}}")    
             .log("calling the credit service")
@@ -71,17 +83,34 @@ public class RestRoute extends RouteBuilder {
             .log("BODY: ${body}")
             .to("{{service.creditservice.url}}?httpMethod=POST"); 
 
-        from( "{{route.creditVersion}}")    
-            .log("calling the credit Version")
+        from("{{route.creditAllTransaction}}")
+            .log("calling the credit service  get all transaction")
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
-            .to("{{service.creditservice.url}}/version?httpMethod=GET")
-            .transform().simple( "credit service => ${body} \n");
+            .to("{{service.creditservice.url}}?httpMethod=GET")
+            .convertBodyTo(String.class); 
 
-
-        from("direct:health")
-            .log("service healthy")
-            .setBody().simple( "healthy" );
-
+        from("{{route.findAllTransactions}}")
+            .log("findAllTransactions")
+            .multicast( new MyAggregationStrategy())
+            .parallelProcessing().timeout(1000).to("{{route.debitAllTransaction}}", "{{route.creditAllTransaction}}")
+            // .to( "{{route.debitAllTransaction}}","{{route.creditAllTransaction}}" )
+            .end();
     }
+
+    private class MyAggregationStrategy implements AggregationStrategy {
+        @Override
+        public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
+            if (oldExchange == null) {
+                return newExchange;
+            }
+            String newBody = newExchange.getIn().getBody(String.class);
+            String oldBody = oldExchange.getIn().getBody(String.class);
+            if(oldBody==null)oldBody="";
+            if(newBody==null)newBody="";
+            newBody = oldBody.concat("\n").concat(newBody);
+            newExchange.getIn().setBody(newBody);
+            return newExchange;
+        }
+      }
 }

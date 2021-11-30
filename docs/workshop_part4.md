@@ -123,3 +123,5 @@ status:
 :tada: FÉLICITATION
 
 Vous avez maintenant un deuxième project qui est pris en charge par le Service Mesh
+
+:point_right: Retour: [Démo](../README.md#demo)

@@ -53,10 +53,8 @@ Le ServiceMeshMemberRoll répertorie les projets qui appartiennent au plan de co
 ![ossm-1](images/ossm-1.png)
 
 * Dans `Istio Service Mesh Member Roll` cliquer sur `Create instance`
-![ossm-2](images/ossm-2.png)
 
 * Dans la section `Members`, mettre le nom du projet et cliquer `Create`
-
 
 ![ossm-memberroll](images/ossm-memberroll.png)
 
