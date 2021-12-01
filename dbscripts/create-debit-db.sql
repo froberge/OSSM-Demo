@@ -1,12 +1,7 @@
 DROP TABLE IF EXISTS "transaction";
-DROP SEQUENCE IF EXISTS "transaction_seq";
-
-CREATE SEQUENCE "transaction_seq"
-  START WITH     1
-  INCREMENT BY   1;
 
 CREATE TABLE "transaction"(
-  ID   INT              NOT NULL,
+  ID   SERIAL,
   CLIENT_ID VARCHAR(20) NOT NULL,
   TYPE VARCHAR(10)      NOT NULL,
   LOCATION VARCHAR(50)  NOT NULL,
