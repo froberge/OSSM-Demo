@@ -5,13 +5,10 @@ import com.thecat.demos.transactionservice.entities.TransactionDTO;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 
 
 
@@ -77,6 +74,7 @@ public class TransactionRoute extends RouteBuilder {
             String oldBody = oldExchange.getIn().getBody(String.class);
             if(oldBody==null)oldBody="";
             if(newBody==null)newBody="";
+
             newBody = oldBody.concat("\n").concat(newBody);
             newExchange.getIn().setBody(newBody);
             return newExchange;

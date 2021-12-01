@@ -1,13 +1,10 @@
 package com.thecat.demos.transactionservice.route;
 
-import com.thecat.demos.transactionservice.entities.TransactionDTO;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 
