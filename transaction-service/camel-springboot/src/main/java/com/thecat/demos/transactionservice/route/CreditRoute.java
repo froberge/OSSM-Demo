@@ -34,6 +34,9 @@ public class CreditRoute extends RouteBuilder {
             .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
         rest("/credit")
+            .get("/").produces("application/json").route()
+            .to("{{route.creditAllTransaction}}")
+            .endRest()
             .get("/version").route()
             .to("{{route.creditVersion}}")
             .end();

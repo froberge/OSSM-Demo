@@ -64,7 +64,6 @@ public class TransactionRoute extends RouteBuilder {
             .log("findAllTransactions")
             .multicast( new MyAggregationStrategy())
             .parallelProcessing().timeout(1000).to("{{route.debitAllTransaction}}", "{{route.creditAllTransaction}}")
-            .unmarshal().json(JsonLibrary.Jackson)
             .end();
     }
 

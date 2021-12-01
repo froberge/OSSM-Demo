@@ -19,8 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class TransactionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_seq" )
-    @SequenceGenerator(  name = "transaction_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column (name="client_id")
