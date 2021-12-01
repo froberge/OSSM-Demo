@@ -19,10 +19,10 @@ public class RestRoute extends RouteBuilder {
                 .bindingMode(RestBindingMode.auto)
                 .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
-        rest("")
+        rest("/rest")
                 .consumes(MediaType.APPLICATION_JSON)
                 .produces(MediaType.APPLICATION_JSON)
-                .get("/health").route()
+                .get("/transaction/health").route()
                 .to("direct:health")
                 .endRest()
                 .post("/transaction")
@@ -43,13 +43,13 @@ public class RestRoute extends RouteBuilder {
             .log("calling the debit service")
             .marshal().json(JsonLibrary.Jackson)
             .log("BODY: ${body}")  
-            .to("http:debitservice:8080/debit?httpMethod=POST"); 
+            .to("http:debitservice:8080/rest/debit?httpMethod=POST"); 
             
         from("direct:creditTransaction")    
             .log("calling the credit service")
             .marshal().json(JsonLibrary.Jackson)
             .log("BODY: ${body}")
-            .to("http:creditservice:8080/credit?httpMethod=POST"); 
+            .to("http:creditservice:8080/rest/credit?httpMethod=POST"); 
 
         from("direct:health")
             .log("--------------------")

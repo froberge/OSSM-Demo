@@ -5,6 +5,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import org.jboss.resteasy.annotations.cache.NoCache;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -14,7 +15,7 @@ import org.apache.camel.Handler;
 
 import org.apache.camel.CamelContext;
 @ApplicationScoped
-@Path("/debit")
+@Path("/rest")
 public class TransactionResources  {
 
 
@@ -23,12 +24,10 @@ public class TransactionResources  {
 
  
     @POST
-    @RolesAllowed("debit-user")
+    @Path("/debit")
     @Handler
     public String getResource(Object body) {
         context.createProducerTemplate().sendBody("direct:writedebit", body);
         return "done";
-        }
-
-        
+    }
 }

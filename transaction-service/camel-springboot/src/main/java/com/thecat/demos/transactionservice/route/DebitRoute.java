@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class CreditRoute extends RouteBuilder {
+public class DebitRoute extends RouteBuilder {
 
     private final Environment env;
 
-    public CreditRoute(Environment env) {
+    public DebitRoute(Environment env) {
         this.env = env;
     }
 
@@ -33,31 +33,27 @@ public class CreditRoute extends RouteBuilder {
             .bindingMode(RestBindingMode.auto)
             .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
-        rest("/credit")
-            .get("/version").route()
-            .to("{{route.creditVersion}}")
+        rest("/debit")
+            .get("/").route()
+            .to("{{route.debitAllTransaction}}")
             .end();
 
-        from( "{{route.creditVersion}}")    
-            .log("calling the credit Version")
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
-            .to("{{service.creditservice.url}}/version?httpMethod=GET")
-            .transform().simple( "credit service => ${body} \n");
-
-        from( "{{route.creditTransaction}}")    
-            .log("calling the credit service")
-            .marshal().json(JsonLibrary.Jackson)
+        from("{{route.debitTransaction}}")
+            .log("calling the debit service")
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
             .log("BODY: ${body}")
-            .to("{{service.creditservice.url}}?httpMethod=POST");
-            
-        from("{{route.creditAllTransaction}}")
-            .log("calling the credit service  get all transaction")
+            .to("{{service.debitservice.url}}?httpMethod=POST"); 
+    
+        from("{{route.debitAllTransaction}}")
+            .log("calling the debit service  get all transaction")
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
-            .to("{{service.creditservice.url}}?httpMethod=GET")
-            .convertBodyTo(String.class);     
+            .doTry()
+                .to("{{service.debitservice.url}}?httpMethod=GET")
+            .doCatch(Exception.class)
+                .setBody().simple("{\"error\": \"Debit Service\"}")
+            .end()
+            .convertBodyTo(String.class); 
     }
 }

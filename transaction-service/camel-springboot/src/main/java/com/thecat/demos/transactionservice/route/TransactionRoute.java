@@ -24,77 +24,43 @@ public class TransactionRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         restConfiguration()
-                .contextPath(env.getProperty("camel.component.servlet.mapping.contextPath", "/rest/*"))
-                .apiContextPath("/api-doc")
-                .apiProperty("api.title", "Transaction Service")
-                .apiProperty("api.version", "1.0")
-                .apiProperty("cors", "true")
-                .apiContextRouteId("doc-api")
-                .port(env.getProperty("server.port", "8080"))
-                .bindingMode(RestBindingMode.auto)
-                .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
+            .contextPath(env.getProperty("camel.component.servlet.mapping.contextPath", "/rest/*"))
+            .apiContextPath("/api-doc")
+            .apiProperty("api.title", "Transaction Service")
+            .apiProperty("api.version", "1.0")
+            .apiProperty("cors", "true")
+            .apiContextRouteId("doc-api")
+            .port(env.getProperty("server.port", "8080"))
+            .bindingMode(RestBindingMode.auto)
+            .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
         rest("/transaction")
-                .consumes(MediaType.APPLICATION_JSON_VALUE)
-                .produces(MediaType.APPLICATION_JSON_VALUE)
-                .get("/health").route()
-                .to("direct:health")
-                .endRest()
-                .get("/").route()
-                .to("{{route.findAllTransactions}}")
-                .endRest()
-                .post("/").type(TransactionDTO.class).route()
-                .choice()
-                    .when().simple("${body.type} == 'debit'")
-                        .to("{{route.debitTransaction}}")
-                    .when().simple("${body.type} == 'credit'")
-                        .to("{{route.creditTransaction}}") 
-                    .otherwise()
-                        .log( "invalid path : ${body.type}" )
-                .end();
+            .consumes(MediaType.APPLICATION_JSON_VALUE)
+            .produces(MediaType.APPLICATION_JSON_VALUE)
+            .get("/health").route()
+            .to("direct:health")
+            .endRest()
+            .get("/").route()
+            .to("{{route.findAllTransactions}}")
+            .endRest()
+            .post("/").type(TransactionDTO.class).route()
+            .choice()
+                .when().simple("${body.type} == 'debit'")
+                    .to("{{route.debitTransaction}}")
+                .when().simple("${body.type} == 'credit'")
+                    .to("{{route.creditTransaction}}") 
+                .otherwise()
+                    .log( "invalid path : ${body.type}" )
+            .end();
+
         from("direct:health")
             .log("service healthy")
             .setBody().simple( "healthy" );
                 
-        from("{{route.debitTransaction}}")
-            .log("calling the debit service")
-            .marshal().json(JsonLibrary.Jackson)
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
-            .log("BODY: ${body}")
-            .to("{{service.debitservice.url}}?httpMethod=POST"); 
-
-        from("{{route.debitAllTransaction}}")
-            .log("calling the debit service  get all transaction")
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
-            .doTry()
-                .to("{{service.debitservice.url}}?httpMethod=GET")
-            .doCatch(Exception.class)
-                .setBody().simple("{\"error\": \"Debit Service\"}")
-            .end()
-            .convertBodyTo(String.class); 
-            
-        from( "{{route.creditTransaction}}")    
-            .log("calling the credit service")
-            .marshal().json(JsonLibrary.Jackson)
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
-            .log("BODY: ${body}")
-            .to("{{service.creditservice.url}}?httpMethod=POST"); 
-
-        from("{{route.creditAllTransaction}}")
-            .log("calling the credit service  get all transaction")
-            .removeHeader(Exchange.HTTP_URI)
-            .removeHeader(Exchange.HTTP_PATH)
-            .to("{{service.creditservice.url}}?httpMethod=GET")
-            .convertBodyTo(String.class); 
-
         from("{{route.findAllTransactions}}")
             .log("findAllTransactions")
             .multicast( new MyAggregationStrategy())
             .parallelProcessing().timeout(1000).to("{{route.debitAllTransaction}}", "{{route.creditAllTransaction}}")
-            // .to( "{{route.debitAllTransaction}}","{{route.creditAllTransaction}}" )
             .end();
     }
 
