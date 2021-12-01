@@ -30,7 +30,7 @@ public class CreditRoute extends RouteBuilder {
             .apiProperty("cors", "true")
             .apiContextRouteId("doc-api")
             .port(env.getProperty("server.port", "8080"))
-            .bindingMode(RestBindingMode.auto)
+            .bindingMode(RestBindingMode.json)
             .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
         rest("/credit")
@@ -43,7 +43,7 @@ public class CreditRoute extends RouteBuilder {
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
             .to("{{service.creditservice.url}}/version?httpMethod=GET")
-            .transform().simple( "credit service => ${body} \n");
+            .transform().simple( "credit service => ${body}");
 
         from( "{{route.creditTransaction}}")    
             .log("calling the credit service")
@@ -58,6 +58,6 @@ public class CreditRoute extends RouteBuilder {
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
             .to("{{service.creditservice.url}}?httpMethod=GET")
-            .convertBodyTo(String.class);     
+            .unmarshal().json(JsonLibrary.Jackson);     
     }
 }

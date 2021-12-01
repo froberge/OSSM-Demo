@@ -30,16 +30,15 @@ public class DebitRoute extends RouteBuilder {
             .apiProperty("cors", "true")
             .apiContextRouteId("doc-api")
             .port(env.getProperty("server.port", "8080"))
-            .bindingMode(RestBindingMode.auto)
+            .bindingMode(RestBindingMode.json)
             .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
         rest("/debit")
-            .get("/").route()
-            .to("{{route.debitAllTransaction}}")
-            .end();
+            .get("/").produces("application/json").route().to("{{route.debitAllTransaction}}");
 
         from("{{route.debitTransaction}}")
             .log("calling the debit service")
+            .marshal().json(JsonLibrary.Jackson)
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
             .log("BODY: ${body}")
@@ -54,6 +53,6 @@ public class DebitRoute extends RouteBuilder {
             .doCatch(Exception.class)
                 .setBody().simple("{\"error\": \"Debit Service\"}")
             .end()
-            .convertBodyTo(String.class); 
+            .unmarshal().json(JsonLibrary.Jackson);
     }
 }

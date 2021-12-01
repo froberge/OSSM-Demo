@@ -10,6 +10,9 @@ import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
+
 
 
 @Component
@@ -61,6 +64,7 @@ public class TransactionRoute extends RouteBuilder {
             .log("findAllTransactions")
             .multicast( new MyAggregationStrategy())
             .parallelProcessing().timeout(1000).to("{{route.debitAllTransaction}}", "{{route.creditAllTransaction}}")
+            .unmarshal().json(JsonLibrary.Jackson)
             .end();
     }
 
