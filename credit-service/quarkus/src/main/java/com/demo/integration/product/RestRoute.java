@@ -16,10 +16,10 @@ public class RestRoute extends RouteBuilder {
                 .bindingMode(RestBindingMode.auto)
                 .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
-        rest()
+                rest("/rest")
                 .consumes(MediaType.APPLICATION_JSON)
                 .produces(MediaType.APPLICATION_JSON)
-                .get("/health").route()
+                .get("/credit/health").route()
                 .to("direct:health")
                 .endRest()
                 .get("/credit/{clientId}")

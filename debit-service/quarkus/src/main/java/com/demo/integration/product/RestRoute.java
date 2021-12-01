@@ -12,10 +12,6 @@ import org.apache.camel.builder.RouteBuilder;
 @ApplicationScoped
 public class RestRoute extends RouteBuilder {
 
-    @Inject
-    SecurityIdentity securityIdentity;
-
-
     public void configure() throws Exception {
 
         from("timer:init?repeatCount=1").log("INIT");
@@ -42,7 +38,8 @@ public class RestRoute extends RouteBuilder {
 
         from("direct:health")
             .log("--------------------")
-            .log("service healthy")
+            .log("service healthy") 
+            .setBody(simple("healthy"))
             .log("--------------------");
 
     }

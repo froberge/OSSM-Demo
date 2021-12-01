@@ -28,3 +28,9 @@ ou s'il y a déjà un virtual service
 ```
 oc replace -f k8s/credit-service/virtual-service-v1-v2.yaml
 ```
+
+:tada: FÉLICITATION
+
+Il est maintenant possible de faire des tests.
+
+:point_right: Retour: [Démo](../README.md#demo)

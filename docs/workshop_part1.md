@@ -23,12 +23,12 @@ Pour que l'applicaiton roule nous devons avoir 2 base de données
 
 Base de données Crédit
 ```
-oc apply -k manifests/databases/sb/creditdb
+oc apply -k manifests/databases/creditdb
 ```
 
 Base de données Débit
 ```
-oc apply -k manifests/databases/sb/debitdb
+oc apply -k manifests/databases/debitdb
 ```
 
 ### Déployer le Transaction Service

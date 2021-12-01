@@ -27,7 +27,7 @@ public class RestRoute  extends RouteBuilder {
                 .apiProperty("cors", "true")
                 .apiContextRouteId("doc-api")
                 .port(env.getProperty("server.port", "8080"))
-                .bindingMode(RestBindingMode.auto);
+                .bindingMode(RestBindingMode.json);
 
         rest("/credit")
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
