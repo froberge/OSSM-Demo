@@ -26,6 +26,7 @@ public class RestRoute extends RouteBuilder {
   
         from("direct:getById")
         .log("get by Id")
+        .log("clientid: ${header.clientID}")
         .setBody(simple("select CLIENT_ID, TYPE, LOCATION, AMOUNT from transaction where client_id='${header.clientId}'"))
         .to("jdbc:camel");
 
@@ -37,9 +38,10 @@ public class RestRoute extends RouteBuilder {
 
 
         from("direct:health")
-            .log("--------------------")
+            .log("--------------------")    
             .log("service healthy") 
             .setBody(simple("healthy"))
+
             .log("--------------------");
 
     }
