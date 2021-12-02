@@ -3,17 +3,16 @@ package com.demo.integration.product;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.POST;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.Handler;
-
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Handler;
+
 @ApplicationScoped
 @Path("/rest")
 public class TransactionResources  {

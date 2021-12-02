@@ -13,27 +13,25 @@ public class RestRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         restConfiguration()
-                .bindingMode(RestBindingMode.auto)
+                .bindingMode(RestBindingMode.json)
+                .apiProperty("cors", "true")
                 .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
-                rest("/rest")
+            rest("/rest")
                 .consumes(MediaType.APPLICATION_JSON)
                 .produces(MediaType.APPLICATION_JSON)
                 .get("/credit/health").route()
                 .to("direct:health")
                 .endRest()
-                .get("/credit/{clientId}")
-                .route()
+                .get("/credit/{clientId}").route()
                 .to("direct:getById")
                 .endRest()
-                .get("/credit")
-                .route()
+                .get("/credit").route()
                 .to("direct:getTransactions")
                 .endRest()
-                .post("/credit")
-                .route()
+                .post("/credit").route()
                 .to("direct:writecredit")
-                .endRest();
+                .end();
 
         from("direct:writecredit")
             .log("add credit service")
@@ -43,19 +41,18 @@ public class RestRoute extends RouteBuilder {
             .setBody(simple("done!"));
   
         from("direct:getById")
-        .log("get by Id")
-        .setBody(simple("select CLIENT_ID, TYPE, LOCATION, AMOUNT from transaction where client_id='${header.clientId}'"))
-        .to("jdbc:camel");
+            .log("get by Id")
+            .setBody(simple("select CLIENT_ID, TYPE, LOCATION, AMOUNT from transaction where client_id='${header.clientId}'"))
+            .to("jdbc:camel");
 
         from("direct:getTransactions")
-        .log("getAll")
-        .setBody(simple("select CLIENT_ID, TYPE, LOCATION, AMOUNT from transaction"))
-        .to("jdbc:camel");
+            .log("getAll")
+            .setBody(simple("select CLIENT_ID, TYPE, LOCATION, AMOUNT from transaction"))
+            .to("jdbc:camel");
 
         from("direct:health")
-            .log("--------------------")
             .log("service healthy")
-            .log("--------------------");
+            .setBody(simple("healthy"));
 
     }
 }

@@ -54,6 +54,7 @@ public class RestRoute extends RouteBuilder {
         from("direct:health")
             .log("--------------------")
             .log("service healthy")
+            .setBody(simple("healthy"))
             .log("--------------------");
 
     }
