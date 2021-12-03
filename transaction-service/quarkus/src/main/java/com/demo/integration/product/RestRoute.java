@@ -1,8 +1,9 @@
 package com.demo.integration.product;
 
+import org.apache.camel.AggregationStrategy;
+import org.apache.camel.Exchange;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.apache.camel.Exchange;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +25,14 @@ public class RestRoute extends RouteBuilder {
                 .produces(MediaType.APPLICATION_JSON)
                 .get("/transaction/health").route()
                 .to("direct:health")
+                .endRest()
+                .get("/transaction").route()
+                .removeHeader(Exchange.HTTP_URI)
+                .removeHeader(Exchange.HTTP_PATH)
+                .setHeader(Exchange.CONTENT_TYPE, simple("application/json"))
+                .log("findAllTransactions")
+                .multicast( new MyAggregationStrategy())
+                .parallelProcessing().timeout(1000).to("direct:debitAllTransaction", "direct:creditAllTransaction")
                 .endRest()
                 .post("/transaction")
                 .route()
@@ -52,10 +61,38 @@ public class RestRoute extends RouteBuilder {
             .to("http:creditservice:8080/rest/credit?httpMethod=POST"); 
 
         from("direct:health")
-            .log("--------------------")
             .log("service healthy")
-            .setBody(simple("healthy"))
-            .log("--------------------");
+            .setBody(simple("healthy"));
 
+        from("direct:debitAllTransaction")
+            .log("calling the debit service  get all transaction")
+            .doTry()
+                .to("http:debitservice:8080/rest/debit?httpMethod=GET")
+            .doCatch(Exception.class)
+                .setBody().simple("{\"error\": \"Debit Service\"}")
+            .end()
+            .unmarshal().json(JsonLibrary.Jackson);
+
+        from("direct:creditAllTransaction")
+            .log("calling the credit service  get all transaction")
+            .to("http:creditservice:8080/rest/credit?httpMethod=GET")
+            .unmarshal().json(JsonLibrary.Jackson);
+    }
+
+    private class MyAggregationStrategy implements AggregationStrategy {
+        @Override
+        public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
+            if (oldExchange == null) {
+                return newExchange;
+            }
+            String newBody = newExchange.getIn().getBody(String.class);
+            String oldBody = oldExchange.getIn().getBody(String.class);
+            if(oldBody==null)oldBody="";
+            if(newBody==null)newBody="";
+
+            newBody = oldBody.concat("\n").concat(newBody);
+            newExchange.getIn().setBody(newBody);
+            return newExchange;
+        }
     }
 }

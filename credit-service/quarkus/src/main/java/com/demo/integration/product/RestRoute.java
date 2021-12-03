@@ -13,12 +13,11 @@ public class RestRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         restConfiguration()
-                .bindingMode(RestBindingMode.json)
+                .bindingMode(RestBindingMode.auto)
                 .apiProperty("cors", "true")
                 .dataFormatProperty("disableFeatures", "FAIL_ON_EMPTY_BEANS");
 
             rest("/rest")
-                .consumes(MediaType.APPLICATION_JSON)
                 .produces(MediaType.APPLICATION_JSON)
                 .get("/credit/health").route()
                 .to("direct:health")

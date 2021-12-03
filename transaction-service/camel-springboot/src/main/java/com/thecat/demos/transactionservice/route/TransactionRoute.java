@@ -79,5 +79,5 @@ public class TransactionRoute extends RouteBuilder {
             newExchange.getIn().setBody(newBody);
             return newExchange;
         }
-      }
+    }
 }
