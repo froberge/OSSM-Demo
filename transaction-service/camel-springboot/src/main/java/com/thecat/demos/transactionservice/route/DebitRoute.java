@@ -48,8 +48,7 @@ public class DebitRoute extends RouteBuilder {
             .doTry()
                 .to("{{service.debitservice.url}}?httpMethod=GET")
             .doCatch(Exception.class)
-                .setBody().simple("{\"error\": \"Debit Service\"}")
-            .end()
-            .unmarshal().json(JsonLibrary.Jackson);
+                .setBody().simple("{\"error\": \"Debit Service 403-unauthorize\"}")
+            .end();
     }
 }

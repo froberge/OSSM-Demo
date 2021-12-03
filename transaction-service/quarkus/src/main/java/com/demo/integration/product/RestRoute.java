@@ -24,28 +24,24 @@ public class RestRoute extends RouteBuilder {
                 .consumes(MediaType.APPLICATION_JSON)
                 .produces(MediaType.APPLICATION_JSON)
                 .get("/transaction/health").route()
-                .to("direct:health")
+                    .to("direct:health")
                 .endRest()
                 .get("/transaction").route()
-                .removeHeader(Exchange.HTTP_URI)
-                .removeHeader(Exchange.HTTP_PATH)
-                .setHeader(Exchange.CONTENT_TYPE, simple("application/json"))
-                .log("findAllTransactions")
-                .multicast( new MyAggregationStrategy())
-                .parallelProcessing().timeout(1000).to("direct:debitAllTransaction", "direct:creditAllTransaction")
-                .endRest()
-                .post("/transaction")
-                .route()
-                .removeHeader(Exchange.HTTP_URI)
-                .removeHeader(Exchange.HTTP_PATH)    
-                .log("request received: ${body}")
-                .choice()
-                    .when().simple("${body[type]} == 'debit'")
-                        .to("direct:debitTransaction")
-                    .when().simple("${body[type]} == 'credit'")
-                        .to("direct:creditTransaction") 
-                    .otherwise()
-                        .log( "invalid path : ${body[type]}" )
+                    .removeHeader(Exchange.HTTP_URI)
+                    .removeHeader(Exchange.HTTP_PATH)    
+                    .to("direct:findAllTransactions")
+                .endRest()    
+                .post("/transaction").route()
+                    .removeHeader(Exchange.HTTP_URI)
+                    .removeHeader(Exchange.HTTP_PATH)    
+                    .log("request received: ${body}")
+                    .choice()
+                        .when().simple("${body[type]} == 'debit'")
+                            .to("direct:debitTransaction")
+                        .when().simple("${body[type]} == 'credit'")
+                            .to("direct:creditTransaction") 
+                        .otherwise()
+                            .log( "invalid path : ${body[type]}" )
                 .end();
 
         from("direct:debitTransaction")
@@ -69,13 +65,18 @@ public class RestRoute extends RouteBuilder {
             .doTry()
                 .to("http:debitservice:8080/rest/debit?httpMethod=GET")
             .doCatch(Exception.class)
-                .setBody().simple("{\"error\": \"Debit Service\"}")
-            .end()
-            .unmarshal().json(JsonLibrary.Jackson);
+                .setBody().simple("{\"error\": \"Debit Service 403-unauthorize\"}")
+            .end();
 
         from("direct:creditAllTransaction")
             .log("calling the credit service  get all transaction")
-            .to("http:creditservice:8080/rest/credit?httpMethod=GET")
+            .to("http:creditservice:8080/rest/credit?httpMethod=GET");
+
+        from("direct:findAllTransactions")
+            .log("findAllTransactions")
+            .multicast( new MyAggregationStrategy())
+            .parallelProcessing().timeout(1000).to("direct:debitAllTransaction", "direct:creditAllTransaction")
+            .end()
             .unmarshal().json(JsonLibrary.Jackson);
     }
 
@@ -85,13 +86,28 @@ public class RestRoute extends RouteBuilder {
             if (oldExchange == null) {
                 return newExchange;
             }
-            String newBody = newExchange.getIn().getBody(String.class);
             String oldBody = oldExchange.getIn().getBody(String.class);
-            if(oldBody==null)oldBody="";
-            if(newBody==null)newBody="";
+            String newBody = newExchange.getIn().getBody(String.class);
 
-            newBody = oldBody.concat("\n").concat(newBody);
-            newExchange.getIn().setBody(newBody);
+            if (oldBody==null)
+                oldBody=""; 
+            else {
+                oldBody = oldBody.replaceAll("[\\[\\]]", "" );
+                oldBody = oldBody.concat(",");
+            }
+
+            if (newBody==null)
+                newBody="";
+            else
+                newBody = newBody.replaceAll("[\\[\\]]", "" );
+
+            StringBuffer sb = new StringBuffer();
+            sb.append("[")
+            .append(oldBody)
+            .append(newBody)
+            .append("]");
+
+            newExchange.getIn().setBody(sb.toString());            
             return newExchange;
         }
     }

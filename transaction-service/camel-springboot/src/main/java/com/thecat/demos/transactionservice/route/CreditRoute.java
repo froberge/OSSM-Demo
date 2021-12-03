@@ -57,7 +57,6 @@ public class CreditRoute extends RouteBuilder {
             .log("calling the credit service  get all transaction")
             .removeHeader(Exchange.HTTP_URI)
             .removeHeader(Exchange.HTTP_PATH)
-            .to("{{service.creditservice.url}}?httpMethod=GET")
-            .unmarshal().json(JsonLibrary.Jackson);
+            .to("{{service.creditservice.url}}?httpMethod=GET");
     }
 }

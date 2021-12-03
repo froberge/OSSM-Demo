@@ -5,6 +5,7 @@ import com.thecat.demos.transactionservice.entities.TransactionDTO;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -61,7 +62,8 @@ public class TransactionRoute extends RouteBuilder {
             .log("findAllTransactions")
             .multicast( new MyAggregationStrategy())
             .parallelProcessing().timeout(1000).to("{{route.debitAllTransaction}}", "{{route.creditAllTransaction}}")
-            .end();
+            .end()
+            .unmarshal().json(JsonLibrary.Jackson);
     }
 
     private class MyAggregationStrategy implements AggregationStrategy {
@@ -70,13 +72,28 @@ public class TransactionRoute extends RouteBuilder {
             if (oldExchange == null) {
                 return newExchange;
             }
-            String newBody = newExchange.getIn().getBody(String.class);
             String oldBody = oldExchange.getIn().getBody(String.class);
-            if(oldBody==null)oldBody="";
-            if(newBody==null)newBody="";
+            String newBody = newExchange.getIn().getBody(String.class);
 
-            newBody = oldBody.concat("\n").concat(newBody);
-            newExchange.getIn().setBody(newBody);
+            if (oldBody==null)
+                oldBody="";
+            else {
+                oldBody = oldBody.replaceAll("[\\[\\]]", "" );
+                oldBody = oldBody.concat(",");
+            }
+
+            if (newBody==null)
+                newBody="";
+            else
+                newBody = newBody.replaceAll("[\\[\\]]", "" );
+
+            StringBuffer sb = new StringBuffer();
+            sb.append("[")
+            .append(oldBody)
+            .append(newBody)
+            .append("]");
+
+            newExchange.getIn().setBody(sb.toString());            
             return newExchange;
         }
     }
