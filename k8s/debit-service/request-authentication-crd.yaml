@@ -7,5 +7,5 @@ spec:
     matchLabels:
       app: debitservice
   jwtRules:
-  - issuer: https://keycloak-sso.apps.rhcasalab.sandbox1385.opentlc.com/auth/realms/user-applications
-    jwksUri: https://keycloak-sso.apps.rhcasalab.sandbox1385.opentlc.com/auth/realms/user-applications/protocol/openid-connect/certs
+  - issuer: [REPLACE_WITH_YOUR_VALUE]
+    jwksUri: [REPLACE_WITH_YOUR_VALUE]
