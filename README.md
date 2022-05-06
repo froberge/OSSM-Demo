@@ -4,82 +4,13 @@ Bienvenue dans l'atelier de travail sur [**Red Hat OpenShift Service Mesh**](htt
 
 ---
 ## Table des matières
- * [Installation du ServiceMesh](https://github.com/frobergehowto-ocp-servicemesh-setup/)
- * [Architecture](#architecture)
- * [Prerequis](#prerequis)
- * [Installation des Operateurs](#installation-des-operateurs)
- * [Configuration du Service Mesh](#configuration-du-service-mesh)
-
----
-### Caractéristiques Principales
-* Découverte de services
-* Équilibrage de charge ( Load Balancing)
-* Authentication service à service
-* Récupération à l'échec ( Failure recovery)
-* Métriques 
-* Surveillence
-* Testing A/B
-* Canary Release
-* Rate limiting
-* Control des accès
-* Authentication End-to-end
-
----
-### Architecture
-
-![Architecture](docs/images/ossm-control-data-plane.png)
-
-#### Composantes
-
-* [Istio](https://istio.io/): Istio fourni le controle et le data plane qui sont les composante principale du `Service Mesh`. Il est opérationnalisé dans OpenShift avec l'opérateur `Red Hat OpenShift Service Mesh`.
-
-* [Jaeger](https://www.jaegertracing.io/): Jaeger is un Open Source distributed tracing application. Il nous permet de tracer end-to-end une requête de façon centralisé sur plusieurs service. Grace a Jaeger nous pouvons plus facilement monitorer et trouver la cause d'un problème dans une architecture distribué. Il est opérationnalisé dans OpenShift avec l'opérateur `Red Hat OpenShift distributed tracing platform`.
-
-* [ElasticSearch](https://www.elastic.co/): ElasticSearch est un Open source Engin de recherche et d'analytique distribué basé sur JSON. Il est utilisé par Jaeger pour storer et indexer les données de traçage.
-Il est opérationnalisé dans OpenShift avec l'opérateur `OpenShift Elasticsearch Operator`.
-
-* [Kiali](https://kiali.io/): Kiali est la console de gestion de Red Hat Service Mesh. Il fourni des dashboard, observabilité et de capacité de rebosted et de configuration robust. Grâce a Kiali on peut voir la structure de la Service Mesh en regardant la topology des service et ainsi voir la santé de notre service mesh. Il est opérationnalisé dans OpenShift avec l'opérateur `Kiali Operator`.
-
-* [Grafana](https://grafana.com/)[Prometheus](https://prometheus.io/): Grafana fourni des dashboard et Prometheus store les informations de télémétrie des services. Kiali est dépendant de Prometheus. Grafana et Prometheus viennent par défault dans la plateforme OpenShift.
-
---- 
-### Prérequis
-
- * Un cluster OpenShift
- * Un compte administraeur pour se connecter au cluster
-
----
-### Installation des Operateurs
-
-Comme nous l'avons vu dans les composantes, Red Hat OpenShift Service Mesh s'appui sur plusieurs composantes, 4 opérateurs doivent donc être installé.
-
-Tout les operators peuvent-être installé a partir de `Operators -> OperatorHub`. 
-
-![Operator Hub](docs/images/operator-hub.png)
-
-
-1. [OpenShift Elasticsearch Operator](docs/install-elastic-operator.md)
-2. [Red Hat OpenShift distributed tracing platform](docs/install-jaeger-operator.md)
-3. [Kiali Operator](docs/install-kiali-operator.md)
-4. [Red Hat OpenShift Service Mesh](docs/install-ossm-operator.md)
-5. [Configuration du Service Mesh](#configuration-du-service-mesh)
-6. [Démo](#démo)
-
-Un fois terminer on devrait voir les different Opérateurs sous `Operators -> Installed Operators`
-
-![Installed Operators](docs/images/all-operator.png)
-
----
-### Configuration du Service Mesh
-
-Maintenant que nous avons installé les opérateurs requis pour faire fonctionner le OpenShift Service Mesh nous devons la configurer.
-
-[Installer le ServiceMesh Control Plane](docs/configure-ossm.md)
+ * [Installation du ServiceMesh](https://github.com/froberge/howto-ocp-servicemesh-setup/)
+ * [Démo](#demo)
 
 ---
 ## Démo
 
-Pour cette démo nous allons utiliser 3 service:
+Pour cette démo nous allons utiliser 3 services:
 * [Service transaction](transaction-service/README.md)
 * [Service Credit](credit-service/README.md)
 * [Service Debit](credit-service/README.md)
