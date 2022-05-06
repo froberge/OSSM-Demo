@@ -2,16 +2,9 @@
 
 Bienvenue dans l'atelier de travail sur [**Red Hat OpenShift Service Mesh**](https://www.redhat.com/en/technologies/cloud-computing/openshift/what-is-openshift-service-mesh#:~:text=Red%20Hat%C2%AE%20OpenShift%C2%AE,microservices%20in%20your%20service%20mesh.)
 
-
-## Services en réseautique simple pour les applications Kubernetes d'entreprise.
-[Red Hat OpenShift Service Mesh](https://www.redhat.com/en/technologies/jboss-middleware/codeready-workspaces) founit un outil unique pour connecter, gérer et surveiller les applications [microservice](https://www.redhat.com/fr/topics/microservices/what-are-microservices). Red Hat OpenShift Service Mesh offre une excellent niveau de contrôle et visibilité sur le comportement des différentes microservices en réseau qui y sont déployé dans la mesh. 
-
-Le Service Mesh utilise un proxy de type `sidecar` par [Envoy](https://www.envoyproxy.io/) pour intercepter les communications réseau entre les microservices. `Red Hat OpenShift Service Mesh` repose sur le project libre 
-[Istio](https://istio.io/).
-
 ---
 ## Table des matières
-* [Caractéristiques Principales](#caracteristiques-principales)
+ * [Installation du ServiceMesh](https://github.com/frobergehowto-ocp-servicemesh-setup/)
  * [Architecture](#architecture)
  * [Prerequis](#prerequis)
  * [Installation des Operateurs](#installation-des-operateurs)
