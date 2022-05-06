@@ -20,7 +20,7 @@ Le Service Mesh utilise un proxy de type `sidecar` par [Envoy](https://www.envoy
 ---
 ### Caractéristiques Principales
 * Découverte de services
-* Équilivrage de charge ( Load Balancing)
+* Équilibrage de charge ( Load Balancing)
 * Authentication service à service
 * Récupération à l'échec ( Failure recovery)
 * Métriques 
@@ -58,7 +58,7 @@ Il est opérationnalisé dans OpenShift avec l'opérateur `OpenShift Elasticsear
 ---
 ### Installation des Operateurs
 
-Comme nous l'avons vus dans les composante, Red Hat OpenShift Service Mesh comprend plusieurs composante. Nous devons donc installé 4 opérateurs pour pouvoir la mettre en place.
+Comme nous l'avons vu dans les composantes, Red Hat OpenShift Service Mesh s'appui sur plusieurs composantes, 4 opérateurs doivent donc être installé.
 
 Tout les operators peuvent-être installé a partir de `Operators -> OperatorHub`. 
 
